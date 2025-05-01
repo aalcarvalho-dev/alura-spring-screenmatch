@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.alura.cursospring.model.DadosEpisodio;
 import com.alura.cursospring.model.DadosSerie;
 import com.alura.cursospring.model.DadosTemporada;
+import com.alura.cursospring.principal.Principal;
 import com.alura.cursospring.service.ConsumoAPI;
 import com.alura.cursospring.service.ConverteDados;
 
@@ -22,6 +23,9 @@ public class ScreenmatchApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
+		Principal principal = new Principal();
+		principal.exibeMenu();
+		
 		var consumoApi = new ConsumoAPI();
 		var json = consumoApi.obterDados("https://www.omdbapi.com/?apikey=7638fe5c&t=gilmore+girls");
 		System.out.println(json);
@@ -34,7 +38,7 @@ public class ScreenmatchApplication implements CommandLineRunner{
 		System.out.println(dadosEpisodio);
 
 		List<DadosTemporada> temporadas = new ArrayList<>();
-		for (int i =1; i < dadosSerie.totalTemporadas(); i++) {
+		for (int i =1; i <= dadosSerie.totalTemporadas(); i++) {
 			json = consumoApi.obterDados("https://www.omdbapi.com/?apikey=7638fe5c&t=gilmore+girls&season="+i);
 			DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
 			temporadas.add(dadosTemporada);
