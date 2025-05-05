@@ -1,9 +1,13 @@
 package com.alura.cursospring.principal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+import com.alura.cursospring.model.DadosEpisodio;
 import com.alura.cursospring.model.DadosSerie;
 import com.alura.cursospring.model.DadosTemporada;
 import com.alura.cursospring.service.ConsumoAPI;
@@ -30,7 +34,7 @@ public class Principal {
 			DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
 			temporadas.add(dadosTemporada);
 		}
-		temporadas.forEach(System.out::println);
+		//temporadas.forEach(System.out::println);
 
         System.out.println("====================================");
 
@@ -43,6 +47,22 @@ public class Principal {
         } */
 
         //substituindo o trecho acima por lambdas
-        temporadas.forEach(t->t.episodios().forEach(e->System.out.println(e.titulo())));
+        //temporadas.forEach(t->t.episodios().forEach(e->System.out.println(e.titulo())));
+
+        List<String> nomes = Arrays.asList("Bené","Pedro","Anabelle","Zumbido","Monique","Caíque");
+        nomes.stream()
+            .filter(n -> n.startsWith("P"))
+            .sorted()
+            .limit(3)
+            .map(n -> n.toUpperCase())
+            .forEach(System.out::println);
+
+        List<DadosEpisodio> dadosEpisodios = temporadas
+            .stream()
+            .flatMap(t -> t.episodios().stream())
+            .collect(Collectors.toList());
+        
+        dadosEpisodios.forEach(System.out::println);
+
     }
 }
