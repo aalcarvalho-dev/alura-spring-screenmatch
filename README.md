@@ -92,3 +92,56 @@ Na Classe Principal:
 ```
 
 Criada tag v2.0 no GIT
+
+## Aula 3
+Trabalhando com lambdas
+
+- Alguns métodos do Stream
+ - ```filter()```   - filtra a coleção
+ - ```sorted()```   - ordena
+ - ```limit()```    - limita a quantidade de resultados
+ - ```map()```      - transforma o tipo da entrada para o tipo da saída
+ - ```forEach()```  - itera sobre a lista
+ - ```flatMap()```  - aglutina o resultado em um só (ex.: de temporadas para dados episodios)
+ - ```toList()```   - retorna uma lista imutável
+ - ```collect()```  - coleta os dados e coloca numa nova lista
+
+__Obs.: Tem diferença um .forEach dentro do fluxo (stream) e fora, diretamente na lista!__
+__Obs.: A ordem das operações intermediárias faz diferença!__
+
+```
+List<String> nomes = Arrays.asList("Bené","Pedro","Anabelle","Zumbido","Monique","Caíque");
+nomes.stream()
+    .filter(n -> n.startsWith("P"))
+    .sorted()
+    .limit(3)
+    .map(n -> n.toUpperCase())
+    .forEach(System.out::println);
+```
+
+- Ao criar a classe .model.Episodio estamos indicando que a partir daqui começa 
+a separação entre o retorno da api e as regras de negócio da nossa aplicação.
+
+No try...catch() tratar o erro direto no construtor da model. Exemplo de Episodio.java:
+
+```
+public Episodio(Integer temporada, DadosEpisodio dadosEpisodio) {
+    this.temporada = temporada;
+    this.titulo = dadosEpisodio.titulo();
+    this.numero = dadosEpisodio.numeroEpisodio();
+    
+    try {
+        this.avaliacao = Double.valueOf(dadosEpisodio.avaliacao());
+    } catch (NumberFormatException nfe) {
+        this.avaliacao = 0.0;
+    }
+
+    try{
+        this.dataLancameto = LocalDate.parse(dadosEpisodio.dataLancamento());
+    } catch(DateTimeParseException dtpe){
+        this.dataLancameto = null;
+    }
+}
+```
+
+Obs.: Lembre-se que, toda vez que usamos nextInt(), em seguida devemos usar nextLine(). Caso contrário, quando teclarmos "Enter", ele confundirá os valores lidos.
