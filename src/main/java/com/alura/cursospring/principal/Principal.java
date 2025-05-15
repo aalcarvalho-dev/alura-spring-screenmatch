@@ -5,13 +5,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import com.alura.cursospring.model.DadosEpisodio;
 import com.alura.cursospring.model.DadosSerie;
 import com.alura.cursospring.model.DadosTemporada;
 import com.alura.cursospring.model.Episodio;
@@ -25,6 +23,7 @@ public class Principal {
     private final String APIKEY = "7638fe5c&t=";
     private ConsumoAPI consumoAPI = new ConsumoAPI();
     private ConverteDados conversor = new ConverteDados();
+    private String nome;
 
     public void exibeMenu(){
         System.out.print("Digite o nome da Série: ");
@@ -97,6 +96,17 @@ public class Principal {
                     );
                 });
         
+        System.out.println("=========== pegando por trecho de titulo ==========");  
+        var trechoTitulo = leitura.nextLine();
+        Optional<Episodio> episodio = episodios.stream()
+                .filter(n -> n.getTitulo().toUpperCase().contains(trechoTitulo.toUpperCase()))
+                .findFirst();
+                //.forEach(System.out::println);
+        if (episodio.isPresent()){
+            System.out.println(episodio.get().getTemporada()+" aqui");
+        }
+        
+        System.out.println("=========== testando datas ==========");  
         LocalTime hora = LocalTime.now();
         System.out.println(hora);
 
@@ -114,5 +124,18 @@ public class Principal {
         DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss");
         LocalDateTime agora = LocalDateTime.now();
         System.out.println(hoje.format(formatador));
+
+        System.out.println("=========== testando optional ==========");  
+        Optional<String> optionalDeNome = getNome();
+        optionalDeNome.ifPresent(System.out::println);
+        String orElse = optionalDeNome.orElse("Não achou!");
+        System.out.println("orelse"+orElse);
+        nome = "amor";
+        optionalDeNome = getNome();
+        optionalDeNome.ifPresent(System.out::println);
+    }
+
+    public Optional<String> getNome(){
+        return Optional.ofNullable(nome);
     }
 }
