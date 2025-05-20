@@ -145,3 +145,58 @@ public Episodio(Integer temporada, DadosEpisodio dadosEpisodio) {
 ```
 
 Obs.: Lembre-se que, toda vez que usamos nextInt(), em seguida devemos usar nextLine(). Caso contrário, quando teclarmos "Enter", ele confundirá os valores lidos.
+
+- Buscando após uma determinada data:
+```
+        LocalDate dataBusca = LocalDate.of(ano, 1, 1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        episodios.stream()
+                .filter(e -> e.getDataLancameto()!=null && e.getDataLancameto().isAfter(dataBusca))
+                .forEach(e -> {
+                    System.out.println(
+                        "Temporada: "+e.getTemporada()+
+                        " Episódio: "+e.getTitulo()+
+                        " Data de Lançamento: "+e.getDataLancameto().format(formatter)
+                    );
+                });
+```
+
+## Aula 4
+Algumas Functional Interfaces:
+```
+Consumer<String> print = (message) -> System.out.println(message);
+print.accept("Hello, functional!");
+
+Predicate<Integer> testaSituacao = a -> a>5;
+System.out.println(testaSituacao.test(6));
+
+Predicate<String> testaPalavra = palavra -> palavra.contains("amor");
+System.out.println(testaPalavra.test("ramon"));
+
+//Function<Integer, Boolean> funcao = argumento -> argumento * 5 > 30;
+Function<Integer, Boolean> funcao = SpringDesafio4Application::testaArgumento;
+System.out.println("Calcula maiores que 30: "+funcao.apply(7)); 
+
+Supplier<String> supplier = () -> "meu supplier";
+System.out.println(supplier.get());
+```
+
+Streams utilizam Functional Interfaces
+As operações em Stream API frequentemente recebem lambda expressions, que são implementações de functional interfaces. Por exemplo:
+```
+- Predicate<T> em filter()
+- Function<T,R> em map()
+- Consumer<T> em forEach()
+- Supplier<T> em generate()
+- BinaryOperator<T> em reduce()
+```
+Uso da função peek: Foi introduzida a função peek no Java, que permite visualizar o que está acontecendo em cada etapa da stream, facilitando o processo de debug.
+
+Operações Intermediárias e Finais: Aprendemos sobre a utilização de operações (como map, filter e find) que nos permitem manipular e encontrar dados dentro de um Stream.
+
+Uso de Containers para Dados: Examinamos como usar o Container Optional para armazenar um episódio dentro de um Stream e evitar referências nulas.
+
+Filtragem de dados: Aprendemos a importância de filtrar dados adequados para análises e como isso pode afetar os resultados.
+
+Uso do DoubleSummaryStatistics: Aprendemos como a classe Double Summary Statistics do Java pode ajudar a analisar informações, como a maior avaliação, a menor e a quantidade de avaliações em nossas séries.

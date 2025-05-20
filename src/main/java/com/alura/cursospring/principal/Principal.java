@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -101,10 +103,25 @@ public class Principal {
         Optional<Episodio> episodio = episodios.stream()
                 .filter(n -> n.getTitulo().toUpperCase().contains(trechoTitulo.toUpperCase()))
                 .findFirst();
-                //.forEach(System.out::println);
-        if (episodio.isPresent()){
+
+            if (episodio.isPresent()){
             System.out.println(episodio.get().getTemporada()+" aqui");
         }
+
+        System.out.println("=========== média de avaliação por temporada ==========");  
+        Map<Integer, Double> avaliacoesPorTemporada = episodios.stream()
+                                                                .filter(a -> a.getAvaliacao() > 0.0)
+                                                                .collect(Collectors.groupingBy(Episodio::getTemporada, Collectors.averagingDouble(Episodio::getAvaliacao)));
+        System.out.println(avaliacoesPorTemporada);
+
+        DoubleSummaryStatistics est = episodios.stream()
+                                                .filter(e -> e.getAvaliacao()>0.0)
+                                                .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
+        System.out.println(est);
+        System.out.println("Total de episódios avaliados: "+ est.getCount());
+        System.out.println("Média de episódios avaliados: "+est.getAverage());
+        System.out.println("Pior avaliação: "+est.getMin());
+        System.out.println("Melhor avaliação: "+est.getMax());
         
         System.out.println("=========== testando datas ==========");  
         LocalTime hora = LocalTime.now();
